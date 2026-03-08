@@ -1,3 +1,8 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+import { db } from "@/lib/firebase";
+import { collection, addDoc } from "firebase/firestore";
 import { SpreadsheetDocument } from "@/types/document";
 
 const documents: SpreadsheetDocument[] = [
@@ -16,9 +21,33 @@ const documents: SpreadsheetDocument[] = [
 ];
 
 export default function DashboardPage() {
+  const router = useRouter();
+
+  const createNewDocument = async () => {
+    try {
+      const docRef = await addDoc(collection(db, "documents"), {
+        title: "Untitled Spreadsheet",
+        author: "Anonymous",
+        updatedAt: Date.now(),
+      });
+
+      router.push(`/doc/${docRef.id}`);
+    } catch (error) {
+      console.error("Error creating document:", error);
+    }
+  };
+
   return (
     <div className="p-8">
       <h1 className="text-2xl font-bold mb-6">Documents</h1>
+
+      {/* Button */}
+      <button
+        onClick={createNewDocument}
+        className="bg-blue-500 text-white px-4 py-2 rounded mb-4"
+      >
+        New Spreadsheet
+      </button>
 
       <table className="min-w-full border border-gray-200 rounded-lg">
         <thead className="bg-gray-100">
