@@ -166,6 +166,8 @@ export default function SpreadsheetEditorPage() {
                   <div key={cellId} className="border-t border-l h-10">
                     <SpreadsheetCell
                       value={displayValue}
+                      row={rowIndex}
+                      col={columns.indexOf(col)}
                       onChange={(value: string) => updateCell(cellId, value)}
                     />
                   </div>
