@@ -1,11 +1,23 @@
 "use client";
+
 import SpreadsheetCell from "@/components/spreadsheet/SpreadsheetCell";
+import { useState } from "react";
+
 export default function SpreadsheetEditorPage() {
   const rows = 50;
 
   const columns = Array.from({ length: 26 }, (_, i) =>
     String.fromCharCode(65 + i),
   );
+
+  const [cells, setCells] = useState<Record<string, string>>({});
+
+  const updateCell = (cellId: string, value: string) => {
+    setCells((prev) => ({
+      ...prev,
+      [cellId]: value,
+    }));
+  };
 
   return (
     <div className="flex flex-col h-screen">
@@ -40,11 +52,18 @@ export default function SpreadsheetEditorPage() {
               </div>
 
               {/* Cells */}
-              {columns.map((col) => (
-                <div key={col} className="border-t border-l h-10">
-                  <SpreadsheetCell />
-                </div>
-              ))}
+              {columns.map((col) => {
+                const cellId = `${col}${rowIndex + 1}`;
+
+                return (
+                  <div key={cellId} className="border-t border-l h-10">
+                    <SpreadsheetCell
+                      value={cells[cellId] || ""}
+                      onChange={(value: string) => updateCell(cellId, value)}
+                    />
+                  </div>
+                );
+              })}
             </div>
           ))}
         </div>

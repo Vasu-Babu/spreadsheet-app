@@ -1,21 +1,19 @@
 "use client";
 
-import { useState } from "react";
-
 interface SpreadsheetCellProps {
-  initialValue?: string;
+  value: string;
+  onChange: (value: string) => void;
 }
 
 export default function SpreadsheetCell({
-  initialValue = "",
+  value,
+  onChange,
 }: SpreadsheetCellProps) {
-  const [value, setValue] = useState(initialValue);
-
   return (
     <input
       type="text"
       value={value}
-      onChange={(e) => setValue(e.target.value)}
+      onChange={(e) => onChange(e.target.value)}
       className="w-full h-full px-2 outline-none border-none text-sm"
     />
   );
