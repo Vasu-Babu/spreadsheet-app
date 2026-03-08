@@ -10,14 +10,15 @@ const documents: SpreadsheetDocument[] = [
     id: "1",
     title: "Budget Sheet",
     author: "Alex",
-  
     updatedAt: Date.now(),
+    cells:{},
   },
   {
     id: "2",
     title: "Team Planning",
     author: "Sam",
     updatedAt: Date.now(),
+    cells:{},
   },
 ];
 
