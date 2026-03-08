@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { db } from "@/lib/firebase";
 import { doc, updateDoc, onSnapshot } from "firebase/firestore";
 import { useParams } from "next/navigation";
+import { parseFormula } from "@/lib/formulaParser";
 
 import SpreadsheetCell from "@/components/spreadsheet/SpreadsheetCell";
 import { useState } from "react";
@@ -85,11 +86,13 @@ export default function SpreadsheetEditorPage() {
               {/* Cells */}
               {columns.map((col) => {
                 const cellId = `${col}${rowIndex + 1}`;
+                const cellValue = cells[cellId] || "";
+                const displayValue = parseFormula(cellValue, cells);
 
                 return (
                   <div key={cellId} className="border-t border-l h-10">
                     <SpreadsheetCell
-                      value={cells[cellId] || ""}
+                      value={displayValue}
                       onChange={(value: string) => updateCell(cellId, value)}
                     />
                   </div>
