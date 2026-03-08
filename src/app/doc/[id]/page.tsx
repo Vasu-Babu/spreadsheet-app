@@ -26,12 +26,15 @@ export default function SpreadsheetEditorPage() {
   const [userName, setUserName] = useState("");
 
   const [activeUsers, setActiveUsers] = useState<string[]>([]);
+  const [saveStatus, setSaveStatus] = useState<"saved" | "saving">("saved");
 
   const updateCell = async (cellId: string, value: string) => {
     setCells((prev) => ({
       ...prev,
       [cellId]: value,
     }));
+
+    setSaveStatus("saving");
 
     try {
       const docRef = doc(db, "documents", documentId);
@@ -40,8 +43,11 @@ export default function SpreadsheetEditorPage() {
         [`cells.${cellId}`]: value,
         updatedAt: Date.now(),
       });
+
+      setSaveStatus("saved");
     } catch (error) {
       console.error("Error updating cell:", error);
+      setSaveStatus("saved");
     }
   };
 
@@ -115,7 +121,12 @@ export default function SpreadsheetEditorPage() {
         <h1 className="text-lg font-semibold">Spreadsheet</h1>
 
         <div className="flex items-center gap-6">
+          <span className="text-sm text-gray-500">
+            {saveStatus === "saving" ? "Saving..." : "Saved"}
+          </span>
+
           <ActiveUsers users={activeUsers} />
+
           <span className="text-sm text-gray-600">{userName}</span>
         </div>
       </header>
