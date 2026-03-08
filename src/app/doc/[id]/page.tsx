@@ -1,23 +1,41 @@
 "use client";
 
+import { db } from "@/lib/firebase"
+import { doc, updateDoc } from "firebase/firestore"
+import { useParams } from "next/navigation"
+
 import SpreadsheetCell from "@/components/spreadsheet/SpreadsheetCell";
 import { useState } from "react";
 
 export default function SpreadsheetEditorPage() {
   const rows = 50;
-
+  const params = useParams()
+  const documentId = params.id as string
   const columns = Array.from({ length: 26 }, (_, i) =>
     String.fromCharCode(65 + i),
   );
 
   const [cells, setCells] = useState<Record<string, string>>({});
 
-  const updateCell = (cellId: string, value: string) => {
-    setCells((prev) => ({
-      ...prev,
-      [cellId]: value,
-    }));
-  };
+const updateCell = async (cellId: string, value: string) => {
+
+  setCells((prev) => ({
+    ...prev,
+    [cellId]: value,
+  }))
+
+  try {
+    const docRef = doc(db, "documents", documentId)
+
+    await updateDoc(docRef, {
+      [`cells.${cellId}`]: value,
+      updatedAt: Date.now()
+    })
+
+  } catch (error) {
+    console.error("Error updating cell:", error)
+  }
+}
 
   return (
     <div className="flex flex-col h-screen">
