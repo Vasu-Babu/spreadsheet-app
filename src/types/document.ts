@@ -1,4 +1,4 @@
-export interface Document {
+export interface SpreadsheetDocument {
   id: string;
   title: string;
   author: string;
