@@ -1,27 +1,50 @@
 "use client";
 
 export default function SpreadsheetEditorPage() {
+  const rows = 50;
+
+  const columns = Array.from({ length: 26 }, (_, i) =>
+    String.fromCharCode(65 + i),
+  );
+
   return (
     <div className="flex flex-col h-screen">
       {/* Header */}
-      <header className="h-14 border-b flex items-center px-6 bg-white">
-        <h1 className="text-lg font-semibold">Spreadsheet Editor</h1>
+      <header className="h-14 border-b flex items-center px-6">
+        <h1 className="text-lg font-semibold">Spreadsheet</h1>
       </header>
 
-      {/* Scrollable Grid Container */}
-      <div className="flex-1 overflow-auto bg-gray-50 p-4">
-        <div className="min-w-800 min-h-600 bg-white border rounded shadow-sm">
-          {/* Placeholder Grid */}
-          <div className="grid grid-cols-10 gap-px bg-gray-200">
-            {Array.from({ length: 100 }).map((_, i) => (
-              <div
-                key={i}
-                className="bg-white h-12 flex items-center justify-center text-sm"
-              >
-                {i + 1}
+      {/* Scrollable Grid */}
+      <div className="flex-1 overflow-auto p-4 bg-gray-50">
+        <div className="inline-block border">
+          {/* Column Headers */}
+          <div className="grid grid-cols-[40px_repeat(26,120px)] bg-gray-100 border-b">
+            <div></div>
+
+            {columns.map((col) => (
+              <div key={col} className="border-l text-center font-medium py-2">
+                {col}
               </div>
             ))}
           </div>
+
+          {/* Rows */}
+          {Array.from({ length: rows }).map((_, rowIndex) => (
+            <div
+              key={rowIndex}
+              className="grid grid-cols-[40px_repeat(26,120px)]"
+            >
+              {/* Row Number */}
+              <div className="border-t text-center bg-gray-100 py-2">
+                {rowIndex + 1}
+              </div>
+
+              {/* Cells */}
+              {columns.map((col) => (
+                <div key={col} className="border-t border-l h-10"></div>
+              ))}
+            </div>
+          ))}
         </div>
       </div>
     </div>
