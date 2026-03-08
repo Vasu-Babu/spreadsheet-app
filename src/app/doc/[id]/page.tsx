@@ -1,5 +1,5 @@
 "use client";
-
+import SpreadsheetCell from "@/components/spreadsheet/SpreadsheetCell";
 export default function SpreadsheetEditorPage() {
   const rows = 50;
 
@@ -41,7 +41,9 @@ export default function SpreadsheetEditorPage() {
 
               {/* Cells */}
               {columns.map((col) => (
-                <div key={col} className="border-t border-l h-10"></div>
+                <div key={col} className="border-t border-l h-10">
+                  <SpreadsheetCell />
+                </div>
               ))}
             </div>
           ))}
