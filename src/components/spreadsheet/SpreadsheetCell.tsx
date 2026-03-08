@@ -15,7 +15,7 @@ export default function SpreadsheetCell({
 }: SpreadsheetCellProps) {
   const moveFocus = (r: number, c: number) => {
     const next = document.querySelector(
-      `[data-row="${r}"][data-col="${c}"]`
+      `[data-row="${r}"][data-col="${c}"]`,
     ) as HTMLInputElement;
 
     if (next) next.focus();
@@ -26,24 +26,19 @@ export default function SpreadsheetCell({
       case "ArrowRight":
         moveFocus(row, col + 1);
         break;
-
       case "ArrowLeft":
         moveFocus(row, col - 1);
         break;
-
       case "ArrowDown":
         moveFocus(row + 1, col);
         break;
-
       case "ArrowUp":
         moveFocus(row - 1, col);
         break;
-
       case "Tab":
         e.preventDefault();
         moveFocus(row, col + 1);
         break;
-
       case "Enter":
         e.preventDefault();
         moveFocus(row + 1, col);
@@ -59,7 +54,7 @@ export default function SpreadsheetCell({
       onKeyDown={handleKeyDown}
       data-row={row}
       data-col={col}
-      className="w-full h-full px-2 outline-none border-none text-sm"
+      className="w-full h-full px-2 outline-none border-none text-sm text-black bg-gray-400"
     />
   );
 }

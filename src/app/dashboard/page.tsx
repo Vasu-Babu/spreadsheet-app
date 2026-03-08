@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { db } from "@/lib/firebase";
 import { collection, addDoc } from "firebase/firestore";
 import { SpreadsheetDocument } from "@/types/document";
-import Link from "next/link"
+import Link from "next/link";
 
 const documents: SpreadsheetDocument[] = [
   {
@@ -12,14 +12,14 @@ const documents: SpreadsheetDocument[] = [
     title: "Budget Sheet",
     author: "Alex",
     updatedAt: Date.now(),
-    cells:{},
+    cells: {},
   },
   {
     id: "2",
     title: "Team Planning",
     author: "Sam",
     updatedAt: Date.now(),
-    cells:{},
+    cells: {},
   },
 ];
 
@@ -41,9 +41,16 @@ export default function DashboardPage() {
   };
 
   return (
-     <div className="p-8">
-      <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
-
+    <div className="p-8">
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-2xl font-bold">Dashboard</h1>
+        <button
+          onClick={createNewDocument}
+          className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+        >
+          New Spreadsheet
+        </button>
+      </div>
       <table className="min-w-full border border-gray-200 rounded-lg">
         <thead className="bg-gray-100">
           <tr>
@@ -61,7 +68,9 @@ export default function DashboardPage() {
                 </Link>
               </td>
               <td className="p-3">{doc.author}</td>
-              <td className="p-3">{new Date(doc.updatedAt).toLocaleString()}</td>
+              <td className="p-3">
+                {new Date(doc.updatedAt).toLocaleString()}
+              </td>
             </tr>
           ))}
         </tbody>

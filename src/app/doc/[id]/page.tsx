@@ -163,7 +163,7 @@ export default function SpreadsheetEditorPage() {
                 const displayValue = parseFormula(cellValue, cells);
 
                 return (
-                  <div key={cellId} className="border-t border-l h-10">
+                  <div key={cellId} className="border-t border-l h-10  bg-gray-400">
                     <SpreadsheetCell
                       value={displayValue}
                       row={rowIndex}
