@@ -1,9 +1,13 @@
 "use client";
+
+import ActiveUsers from "@/components/ActiveUsers";
+import { setDoc, deleteDoc } from "firebase/firestore";
+
 import { auth } from "@/lib/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { useEffect } from "react";
 import { db } from "@/lib/firebase";
-import { doc, updateDoc, onSnapshot } from "firebase/firestore";
+import { doc, updateDoc, onSnapshot, collection } from "firebase/firestore";
 import { useParams } from "next/navigation";
 import { parseFormula } from "@/lib/formulaParser";
 
@@ -20,6 +24,8 @@ export default function SpreadsheetEditorPage() {
 
   const [cells, setCells] = useState<Record<string, string>>({});
   const [userName, setUserName] = useState("");
+
+  const [activeUsers, setActiveUsers] = useState<string[]>([]);
 
   const updateCell = async (cellId: string, value: string) => {
     setCells((prev) => ({
@@ -63,12 +69,55 @@ export default function SpreadsheetEditorPage() {
     return () => unsubscribe();
   }, []);
 
+  useEffect(() => {
+    if (!userName) return;
+
+    const presenceRef = doc(db, "documents", documentId, "presence", userName);
+
+    setDoc(presenceRef, {
+      name: userName,
+      lastActive: Date.now(),
+    });
+
+    return () => {
+      deleteDoc(presenceRef);
+    };
+  }, [userName, documentId]);
+
+  useEffect(() => {
+    const presenceCollection = collection(
+      db,
+      "documents",
+      documentId,
+      "presence",
+    );
+
+    const unsubscribe = onSnapshot(presenceCollection, (snapshot) => {
+      const users: string[] = [];
+
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        if (data?.name) {
+          users.push(data.name);
+        }
+      });
+
+      setActiveUsers(users);
+    });
+
+    return () => unsubscribe();
+  }, [documentId]);
+
   return (
     <div className="flex flex-col h-screen">
       {/* Header */}
       <header className="h-14 border-b flex items-center justify-between px-6">
         <h1 className="text-lg font-semibold">Spreadsheet</h1>
-        <span className="text-sm text-gray-600">{userName}</span>
+
+        <div className="flex items-center gap-6">
+          <ActiveUsers users={activeUsers} />
+          <span className="text-sm text-gray-600">{userName}</span>
+        </div>
       </header>
 
       {/* Scrollable Grid */}
