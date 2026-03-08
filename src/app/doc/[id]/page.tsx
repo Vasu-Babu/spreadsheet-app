@@ -1,5 +1,6 @@
 "use client";
-
+import { auth } from "@/lib/firebase";
+import { onAuthStateChanged } from "firebase/auth";
 import { useEffect } from "react";
 import { db } from "@/lib/firebase";
 import { doc, updateDoc, onSnapshot } from "firebase/firestore";
@@ -18,6 +19,7 @@ export default function SpreadsheetEditorPage() {
   );
 
   const [cells, setCells] = useState<Record<string, string>>({});
+  const [userName, setUserName] = useState("");
 
   const updateCell = async (cellId: string, value: string) => {
     setCells((prev) => ({
@@ -51,11 +53,22 @@ export default function SpreadsheetEditorPage() {
     return () => unsubscribe();
   }, [documentId]);
 
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUserName(user.displayName || "User");
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
   return (
     <div className="flex flex-col h-screen">
       {/* Header */}
-      <header className="h-14 border-b flex items-center px-6">
+      <header className="h-14 border-b flex items-center justify-between px-6">
         <h1 className="text-lg font-semibold">Spreadsheet</h1>
+        <span className="text-sm text-gray-600">{userName}</span>
       </header>
 
       {/* Scrollable Grid */}
